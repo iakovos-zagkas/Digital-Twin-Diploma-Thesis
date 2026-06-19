@@ -1,0 +1,80 @@
+frr version 8.4_git
+frr defaults traditional
+hostname {{ name }}
+no ipv6 forwarding
+!
+{% for intf in interfaces %}
+interface {{ intf.name }}
+ {% if intf.description %}
+ description {{ intf.description }}
+ {% endif %}
+ {% if intf.ipv4 %}
+ ip address {{ intf.ipv4 }}
+ {% endif %}
+ no shutdown
+!
+{% endfor %}
+!
+{% if tags %}
+
+{% if 'bgp' in tags %}
+{% if asn %}
+router bgp {{ asn }}
+ {% if ipv4 %}
+ bgp router-id {{ ipv4.split('/')[0] }}
+ {% endif %}
+ no bgp ebgp-requires-policy
+
+ {% for net in bgp_networks %}
+ address-family ipv4 unicast
+  network {{ net }}
+ exit-address-family
+ {% endfor %}
+
+ {% for peer in bgp_peers %}
+ neighbor {{ peer.ipv4.split('/')[0] }} remote-as {{ peer.asn }}
+ {% endfor %}
+{% endif %}
+!
+{% endif %}
+
+{% if 'ospf' in tags %}
+router ospf
+ {% if ipv4 %}
+ ospf router-id {{ ipv4.split('/')[0] }}
+ {% endif %}
+ !
+ {% for intf in interfaces %}
+ {% if intf.ipv4 %}
+ {% set intf_area = intf.custom_fields.ospf_area | default('0.0.0.0') %}
+ network {{ intf.ipv4 }} area {{ intf_area }}
+ {% endif %}
+ {% endfor %}
+!
+{% endif %}
+
+{% if 'rip' in tags %}
+router rip
+ version 2
+ {% for intf in interfaces %}
+ {% if intf.ipv4 %}
+ network {{ intf.ipv4 }}
+ {% endif %}
+ {% endfor %}
+!
+{% endif %}
+
+{% else %}
+
+{% endif %}
+!
+
+{% if static_routes %}
+ {% for route in static_routes %}
+ ip route {{ route.network }} {{ route.nexthop }}
+ {% endfor %}
+{% endif %}
+!
+
+end
+
