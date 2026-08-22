@@ -1,0 +1,126 @@
+name: RIP-Site-1
+topology:
+  nodes:
+    graphite:
+      kind: linux
+      image: netreplica/graphite:latest
+      env:
+        HOST_CONNECTION: ${SSH_CONNECTION}
+      binds:
+      - __clabDir__/topology-data.json:/htdocs/default/default.json:ro
+      - __clabDir__/ansible-inventory.yml:/htdocs/lab/default/ansible-inventory.yml:ro
+      ports:
+      - 8080:80
+      exec:
+      - sh -c 'graphite_motd.sh 8080'
+      labels:
+        graph-hide: true
+    R1-RIP-1:
+      kind: linux
+      image: frrouting/frr:latest
+      labels:
+        graph-icon: router
+        graph-level: 6
+        role: router
+        group: RIP-Site-1
+        platform: frr
+        vendor: Linux
+        model: Frr-Router
+      binds:
+      - R1-RIP-1.config:/etc/frr/frr.conf
+      - daemons:/etc/frr/daemons
+    PC1-RIP-1:
+      kind: linux
+      image: netreplica/ubuntu-host:latest
+      cmd: /start.sh -sS
+      exec:
+      - bash -c "echo root:root | chpasswd"
+      - ip addr add 192.168.1.2/24 dev eth1
+      - ip route replace default via 192.168.1.1
+      labels:
+        graph-icon: server
+        graph-level: 10
+        role: server
+        group: RIP-Site-1
+        platform: linux
+        vendor: Linux
+        model: Server
+    R2-RIP-1:
+      kind: linux
+      image: frrouting/frr:latest
+      labels:
+        graph-icon: router
+        graph-level: 6
+        role: router
+        group: RIP-Site-1
+        platform: frr
+        vendor: Linux
+        model: Frr-Router
+      binds:
+      - R2-RIP-1.config:/etc/frr/frr.conf
+      - daemons:/etc/frr/daemons
+    PC2-RIP-1:
+      kind: linux
+      image: netreplica/ubuntu-host:latest
+      cmd: /start.sh -sS
+      exec:
+      - bash -c "echo root:root | chpasswd"
+      - ip addr add 192.168.2.2/24 dev eth1
+      - ip route replace default via 192.168.2.1
+      labels:
+        graph-icon: server
+        graph-level: 10
+        role: server
+        group: RIP-Site-1
+        platform: linux
+        vendor: Linux
+        model: Server
+    R3-RIP-1:
+      kind: linux
+      image: frrouting/frr:latest
+      labels:
+        graph-icon: router
+        graph-level: 6
+        role: router
+        group: RIP-Site-1
+        platform: frr
+        vendor: Linux
+        model: Frr-Router
+      binds:
+      - R3-RIP-1.config:/etc/frr/frr.conf
+      - daemons:/etc/frr/daemons
+    PC3-RIP-1:
+      kind: linux
+      image: netreplica/ubuntu-host:latest
+      cmd: /start.sh -sS
+      exec:
+      - bash -c "echo root:root | chpasswd"
+      - ip addr add 192.168.3.2/24 dev eth1
+      - ip route replace default via 192.168.3.1
+      labels:
+        graph-icon: server
+        graph-level: 10
+        role: server
+        group: RIP-Site-1
+        platform: linux
+        vendor: Linux
+        model: Server
+  links:
+  - endpoints:
+    - R1-RIP-1:eth1
+    - PC1-RIP-1:eth1
+  - endpoints:
+    - R2-RIP-1:eth1
+    - PC2-RIP-1:eth1
+  - endpoints:
+    - R2-RIP-1:eth2
+    - R1-RIP-1:eth2
+  - endpoints:
+    - R3-RIP-1:eth1
+    - PC3-RIP-1:eth1
+  - endpoints:
+    - R3-RIP-1:eth2
+    - R1-RIP-1:eth3
+  - endpoints:
+    - R3-RIP-1:eth3
+    - R2-RIP-1:eth3
