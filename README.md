@@ -31,5 +31,3 @@ After that, the user has created and deployed a fully functional digital twin of
 This repository contains a series of digital twins of network topologies that are created through the exact mechanism that was presented above. This mechanism and experimental pipeline has been developed completely as part of my diploma thesis at NTUA titled as 'Development of digital twins of network topologies using emulation environments'.
 
 Each folder of this repository contains all the files that are created in a fully automated way from the experimental pipeline, including router configuartion files and YAML files, for different network topologies. The topologies use various routing protocols and switching mechanisms, such as RIP, OSPF, BGP, Linux Bridges and Static Routing.
-
-Finall
