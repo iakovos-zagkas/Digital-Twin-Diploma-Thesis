@@ -1,11 +1,11 @@
 # Digital-Twin-Diploma-Thesis
 Complete walkthrough of how to create a digital twin of a network topology.
 
-This diploma thesis deploys the digital twins of various network topologies, using a mechanism that develops both the structure of thw topology and thw configurations files of the devices in a fully automated way. This README file contains the most significant instructions in order to explain how to create such digital twins with the particular mechanism.
+This diploma thesis creates the digital twins of various network topologies, using a mechanism that develops both the structure of the topology and the configurations files of the devices in a fully automated way. This README file contains the most significant instructions in order to explain how to create such digital twins with the particular mechanism.
 
 At first, the user has to download the software tools that are necessary for the process. The tools that are needed are : Docker, NetBox, Containerlab, nrx. More detailed instructions for downloading the above tools could be found in the formal pages of the tools or in the corresponding chapters of this thesis. Then, the user has to store the files 'build_configurations.py' and 'frr.j2' in the laboratory directory for the digital twin in order to use them later in the pipeline.
 
-As soon as the experimental environment has been created, the next Step is to create the network topology in NetBox. Very useful tips and instructions can be found in the corresponding chapter of the diploma thesis, because some particular conditions have to be met for the successful creation of the topology. Also, NetBox offers some customization tools, such as Custom Fields and Tags, that have been utilized for the topology development.
+As soon as the experimental environment has been created, the next Step is to create the network topology in NetBox. Very useful tips and instructions can be found in the corresponding chapter of the diploma thesis, because some particular conditions have to be met in order to successfully create the topology. Also, NetBox offers some customization tools, such as Custom Fields and Tags, that have been utilized for the topology development.
 
 After the creation of the network topology, the nrx tool is used in order to extract the structure of the topology (nodes - devices, cables) through the REST Api of NetBox. The following code commands are those that complete this task:
 ```
